@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_main.xml"
+    app:startDestination="@id/metasFragment">
+
+    <fragment
+        android:id="@+id/metasFragment"
+        android:name="app.grupo.tuavance.MetasFragment"
+        android:label="fragment_metas"
+        tools:layout="@layout/fragment_metas" >
+        <action
+            android:id="@+id/action_metasFragment_to_objetivoFragment"
+            app:destination="@id/objetivoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/objetivoFragment"
+        android:name="app.grupo.tuavance.ObjetivoFragment"
+        android:label="fragment_objetivo"
+        tools:layout="@layout/fragment_objetivo" >
+        <action
+            android:id="@+id/action_objetivoFragment_to_metasFragment"
+            app:destination="@id/metasFragment" />
+    </fragment>
+</navigation>

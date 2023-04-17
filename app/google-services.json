@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "432190357704",
+    "project_id": "indicadordeavance",
+    "storage_bucket": "indicadordeavance.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:432190357704:android:5f2539b928aad3a6f265fd",
+        "android_client_info": {
+          "package_name": "app.grupo.tuavance"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "432190357704-vnuq97bjt78vca1ndmpgnsktn6gg0kp5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8AocRkV2Ouz_z9oI-KCqTI8Lae_YXAlY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "432190357704-vnuq97bjt78vca1ndmpgnsktn6gg0kp5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

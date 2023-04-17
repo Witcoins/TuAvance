@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="5dp"
+    >
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_tarea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="@color/whiteTransparent2"
+        app:cardCornerRadius="15dp"
+        app:contentPadding="6dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/chulo"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginTop="5dp"
+                    android:src="@drawable/check"
+                    app:layout_constraintEnd_toStartOf="@id/equis"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/fecha"/>
+
+                <ImageView
+                    android:id="@+id/equis"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginTop="5dp"
+                    android:src="@drawable/editar_tarea"
+                    app:layout_constraintEnd_toStartOf="@id/delete"
+                    app:layout_constraintStart_toEndOf="@id/chulo"
+                    app:layout_constraintTop_toBottomOf="@id/fecha"/>
+
+                <ImageView
+                    android:id="@+id/delete"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginTop="5dp"
+                    android:src="@drawable/eliminar"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/equis"
+                    app:layout_constraintTop_toBottomOf="@id/fecha"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingHorizontal="5dp">
+                <TextView
+                    android:id="@+id/tarea"
+                    android:layout_width="match_parent"
+                    android:layout_height="75dp"
+                    android:padding="5dp"
+                    android:textColor="@color/white"
+                    android:background="#525023"
+                    android:textSize="18sp"
+                    tools:text="Objetivo:\nPrueba\nPrueba2"/>
+                <TextView
+                    android:id="@+id/fecha"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:text="Fecha: 15/05/2023"
+                    android:fontFamily="@font/oswald_negrita"
+                    android:padding="5dp"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:background="@color/black"
+                    android:textColor="@color/whiteTransparent2"
+                    android:textSize="13sp"
+                    app:layout_constraintTop_toBottomOf="@id/card_tarea"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <ProgressBar
+        android:id="@+id/progressBar2"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="2dp"
+        android:progressDrawable="@drawable/custom_progress_green" />
+
+</LinearLayout>

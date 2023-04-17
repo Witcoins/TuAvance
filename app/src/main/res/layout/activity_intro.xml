@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/fondo3"
+    tools:context=".IntroActivity">
+
+    <ImageView
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:src="@drawable/titulo"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+
+    <EditText
+        android:id="@+id/email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Tu email aquí"
+        android:textAllCaps="true"
+        android:inputType="textEmailAddress"
+        android:layout_marginBottom="10dp"
+        android:textColorHint="@color/white"
+        android:layout_marginHorizontal="15dp"
+        style="@style/EditText"
+        app:layout_constraintBottom_toTopOf="@id/contrasena"/>
+
+    <EditText
+        android:id="@+id/contrasena"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Tu contraseña"
+        android:inputType="textPassword"
+        android:textAllCaps="true"
+        android:textColorHint="@color/white"
+        android:layout_marginHorizontal="15dp"
+        style="@style/EditText"
+        app:layout_constraintBottom_toTopOf="@id/entrar"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/entrar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/grey"
+        android:text="entrar"
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
