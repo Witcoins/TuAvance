@@ -29,18 +29,9 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:orientation="vertical">
-                <ImageView
-                    android:id="@+id/chulo"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_marginTop="5dp"
-                    android:src="@drawable/check"
-                    app:layout_constraintEnd_toStartOf="@id/equis"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/fecha"/>
 
                 <ImageView
-                    android:id="@+id/equis"
+                    android:id="@+id/edita"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_marginTop="5dp"
@@ -66,7 +57,7 @@
                 android:orientation="vertical"
                 android:paddingHorizontal="5dp">
                 <TextView
-                    android:id="@+id/tarea"
+                    android:id="@+id/objetivo"
                     android:layout_width="match_parent"
                     android:layout_height="75dp"
                     android:padding="5dp"

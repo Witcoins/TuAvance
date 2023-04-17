@@ -24,6 +24,9 @@ class ViewModel: ViewModel() {
     var password = ""
     var email = ""
 
+    var listaObjetivos:MutableList<Objetivo> = mutableListOf()
+    var objetivos:MutableList<String> = mutableListOf()
+
     var objetivo = "Escribe tu objetivo"
     var listaTareas:MutableList<Tarea> = mutableListOf()
     var actualizar = MutableLiveData(false)
