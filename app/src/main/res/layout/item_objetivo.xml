@@ -47,7 +47,6 @@
                     android:layout_marginTop="5dp"
                     android:src="@drawable/eliminar"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/equis"
                     app:layout_constraintTop_toBottomOf="@id/fecha"/>
             </LinearLayout>
 
@@ -63,7 +62,6 @@
                     android:padding="5dp"
                     android:textColor="@color/white"
                     android:background="#525023"
-                    android:textSize="18sp"
                     tools:text="Objetivo:\nPrueba\nPrueba2"/>
                 <TextView
                     android:id="@+id/fecha"

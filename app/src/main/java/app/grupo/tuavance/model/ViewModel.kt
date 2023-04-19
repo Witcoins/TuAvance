@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.util.*
 import java.util.regex.Pattern
 
 class ViewModel: ViewModel() {
@@ -24,10 +25,14 @@ class ViewModel: ViewModel() {
     var password = ""
     var email = ""
 
-    var listaObjetivos:MutableList<Objetivo> = mutableListOf()
-    var objetivos:MutableList<String> = mutableListOf()
+    var calendar: Calendar = Calendar.getInstance()
+    val hoyDia = calendar[Calendar.DAY_OF_MONTH]
+    val hoyMes = calendar[Calendar.MONTH]+1
 
+    var listaObjetivos:MutableList<Objetivo> = mutableListOf()
     var objetivo = "Escribe tu objetivo"
+    lateinit var dataObjetivo:Objetivo
+    var idObjetivo = ""
     var listaTareas:MutableList<Tarea> = mutableListOf()
     var actualizar = MutableLiveData(false)
     lateinit var prefs:SharedPreferences
@@ -36,29 +41,45 @@ class ViewModel: ViewModel() {
     var descripcionTarea = ""
     var editar = false
 
-    fun escribir(tarea:String, fecha:String){
-        db.collection(objetivo)
+    fun escribirTarea(tarea:String, fecha:String, coment:String){
+        db.collection(usuario!!.email!!)
+            .document(idObjetivo)
+            .collection("Tareas")
             .document((listaTareas.size+1).toString())
             .set(
                 hashMapOf(
                     "descripcion" to tarea,
                     "fecha" to fecha,
-                    "chuleada" to false
+                    "chuleada" to false,
+                    "comentario" to coment
                 )
             )
     }
 
-    fun edicion(campo:String, valor:String){
-        db.collection(objetivo)
-            .whereEqualTo("descripcion",descripcionTarea)
+    fun escribirObjetivo(objetivo:String, fecha:String){
+        db.collection(usuario!!.email!!)
+            .document((listaObjetivos.size+1).toString())
+            .set(
+                hashMapOf(
+                    "objetivo" to objetivo,
+                    "fecha" to fecha,
+                    "chuleadas" to 0,
+                    "total" to 0
+                )
+            )
+    }
+
+    fun edicion(correo:String, valor:String, field:String, buscar:String){
+        db.collection(correo)
+            .whereEqualTo(field,buscar)
             .get().addOnCompleteListener {
                 var idDocumento = "0"
                 for(tarea in it.result.documents){
                     idDocumento = tarea.id
                 }
-                db.collection(objetivo)
+                db.collection(correo)
                     .document(idDocumento)
-                    .update(campo,valor)
+                    .update(field,valor)
             }
     }
 

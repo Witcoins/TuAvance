@@ -3,12 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/A10Cad/AndroidStudioProjects/TuAvance/app/src/main/res/drawable-v24/fondo_dialogo2.xml" value="0.2203125" />
         <entry key="..\:/Users/A10Cad/AndroidStudioProjects/TuAvance/app/src/main/res/drawable/custom_et_gris.xml" value="0.2203125" />
         <entry key="..\:/Users/A10Cad/AndroidStudioProjects/TuAvance/app/src/main/res/drawable/custom_progress.xml" value="0.2203125" />
         <entry key="..\:/Users/A10Cad/AndroidStudioProjects/TuAvance/app/src/main/res/drawable/custom_progress_green.xml" value="0.2203125" />
         <entry key="..\:/Users/A10Cad/AndroidStudioProjects/TuAvance/app/src/main/res/layout/activity_intro.xml" value="0.25" />
         <entry key="..\:/Users/A10Cad/AndroidStudioProjects/TuAvance/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Users/A10Cad/AndroidStudioProjects/TuAvance/app/src/main/res/layout/activity_splash.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/A10Cad/AndroidStudioProjects/TuAvance/app/src/main/res/layout/dialog_objetivo.xml" value="0.22" />
         <entry key="..\:/Users/A10Cad/AndroidStudioProjects/TuAvance/app/src/main/res/layout/fragment_metas.xml" value="0.25" />
         <entry key="..\:/Users/A10Cad/AndroidStudioProjects/TuAvance/app/src/main/res/layout/fragment_objetivo.xml" value="0.22" />
         <entry key="..\:/Users/A10Cad/AndroidStudioProjects/TuAvance/app/src/main/res/layout/fragment_tarea.xml" value="0.20416666666666666" />

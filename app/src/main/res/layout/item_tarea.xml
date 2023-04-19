@@ -34,12 +34,12 @@
                     android:layout_height="25dp"
                     android:layout_marginTop="5dp"
                     android:src="@drawable/check"
-                    app:layout_constraintEnd_toStartOf="@id/equis"
+                    app:layout_constraintEnd_toStartOf="@id/editar"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/fecha"/>
 
                 <ImageView
-                    android:id="@+id/equis"
+                    android:id="@+id/editar"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_marginTop="5dp"
@@ -55,7 +55,7 @@
                     android:layout_marginTop="5dp"
                     android:src="@drawable/eliminar"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/equis"
+                    app:layout_constraintStart_toEndOf="@id/editar"
                     app:layout_constraintTop_toBottomOf="@id/fecha"/>
             </LinearLayout>
 
@@ -71,7 +71,6 @@
                     android:padding="5dp"
                     android:textColor="@color/white"
                     android:background="#525023"
-                    android:textSize="18sp"
                     tools:text="Objetivo:\nPrueba\nPrueba2"/>
                 <TextView
                     android:id="@+id/fecha"

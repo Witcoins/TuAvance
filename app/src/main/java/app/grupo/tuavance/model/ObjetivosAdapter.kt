@@ -1,13 +1,12 @@
 package app.grupo.tuavance.model
 
+import android.app.Dialog
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 import androidx.cardview.widget.CardView
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -40,6 +39,22 @@ class ObjetivosAdapter(val contexto:Context, val lista:MutableList<Objetivo>, va
         holder.progreso.max = objetivo.total
         holder.progreso.progress = objetivo.chuleadas
 
+        sharedViewModel.apply {
+            val dia = objetivo.fecha.split("/").component3()
+            val mes = objetivo.fecha.split("/").component2()
+
+            Log.i("prueba","Adapter Objetivo: diaHoy - $hoyDia mesHoy - $hoyMes diaObj - $dia mesObj - $mes")
+
+            if (mes.toInt().toString() == hoyMes.toString()){
+                if(dia.toInt().toString() == (hoyDia+1).toString()){
+                    holder.objetivo.setBackgroundColor(contexto.resources.getColor(R.color.amarillo))
+                    holder.objetivo.setTextColor(contexto.resources.getColor(R.color.black))
+                } else if(dia.toInt().toString() == hoyDia.toString()){
+                    holder.objetivo.setBackgroundColor(contexto.resources.getColor(R.color.red))
+                }
+            }
+        }
+
         holder.delete.setOnClickListener {
             sharedViewModel.apply {
                 db.collection(usuario!!.email!!)
@@ -58,7 +73,8 @@ class ObjetivosAdapter(val contexto:Context, val lista:MutableList<Objetivo>, va
 
         holder.edita.setOnClickListener {
             sharedViewModel.editar = true
-           //¿Cómo hacer que salga un diálogo?
+           //Sale el diálogo de edición
+            dialogoReferido(objetivo.objetivo,objetivo.fecha)
         }
     }
 
@@ -72,7 +88,6 @@ class ObjetivosAdapter(val contexto:Context, val lista:MutableList<Objetivo>, va
 
         init {
             view.setOnClickListener(this)
-            edita.setOnClickListener(this)
         }
 
         override fun onClick(v: View?) {
@@ -86,5 +101,35 @@ class ObjetivosAdapter(val contexto:Context, val lista:MutableList<Objetivo>, va
     //Interfaz que se inicializa en el constructor del fragmento que fija este adapter
     interface OnItemClickListener {
         fun onItemClick(position: Int)
+    }
+
+    private fun dialogoReferido(obj:String,date:String) {
+        val dialogo = Dialog(contexto)
+        dialogo.setContentView(R.layout.dialog_objetivo)
+        dialogo.window?.setBackgroundDrawableResource(R.color.colorTransparent2)
+        dialogo.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
+        dialogo.setCancelable(false)
+        dialogo.findViewById<Button>(R.id.boton_cancelar).setOnClickListener {
+            dialogo.dismiss()
+        }
+        dialogo.findViewById<EditText>(R.id.objetivo).setText(obj, TextView.BufferType.EDITABLE)
+        dialogo.findViewById<EditText>(R.id.fecha).setText(date, TextView.BufferType.EDITABLE)
+        dialogo.findViewById<Button>(R.id.boton_actualizar).setOnClickListener {
+            val et_objetivo = dialogo.findViewById<EditText>(R.id.objetivo)
+            val et_fecha = dialogo.findViewById<EditText>(R.id.fecha)
+            Log.i("prueba","En el adapter: Objetivo - $obj, Fecha - $date")
+            if(et_objetivo.text.toString()!="" && et_fecha.text.toString()!=""){
+                //Siempre edita
+                    sharedViewModel.edicion(correo,et_objetivo.text.toString(),"objetivo",obj)
+                    sharedViewModel.edicion(correo,et_fecha.text.toString(),"fecha",date)
+                dialogo.dismiss()
+            } else {
+                Toast.makeText(contexto,"Completa la info", Toast.LENGTH_LONG).show()
+            }
+        }
+        dialogo.show()
     }
 }
