@@ -39,6 +39,11 @@ class ObjetivosAdapter(val contexto:Context, val lista:MutableList<Objetivo>, va
         holder.progreso.max = objetivo.total
         holder.progreso.progress = objetivo.chuleadas
 
+        if(objetivo.total==objetivo.chuleadas){
+            holder.objetivo.setBackgroundColor(contexto.resources.getColor(R.color.green))
+            holder.objetivo.setTextColor(contexto.resources.getColor(R.color.black))
+        }
+
         sharedViewModel.apply {
             val dia = objetivo.fecha.split("/").component3()
             val mes = objetivo.fecha.split("/").component2()

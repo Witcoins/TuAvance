@@ -97,6 +97,9 @@ class MetasFragment : Fragment(), ObjetivosAdapter.OnItemClickListener {
                         listaObjetivos = listaObjetivos.sortedBy { it.fecha }.toMutableList()
                         binding.rvTareas.adapter = ObjetivosAdapter(requireContext(), listaObjetivos,
                             usuario.email!!,this@MetasFragment)
+                        if(listaObjetivos.size>0){
+                            binding.descripcion.text="Ahora ingresa a cada uno de los objetivos para completar las metas"
+                        }
                     }
                 }
         }

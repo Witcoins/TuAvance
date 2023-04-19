@@ -77,7 +77,7 @@ class CuentosAdapter(val contexto:Context, val lista:MutableList<Tarea>, val obj
                         .delete()
                     sharedViewModel.db.collection(correo)
                         .document(id)
-                        .update("total",objetivo.total-1,"chuleadas",0)
+                        .update("total",objetivo.total-1,"chuleadas",objetivo.chuleadas-1)
                 }
         }
         holder.check.setOnClickListener {
@@ -87,14 +87,18 @@ class CuentosAdapter(val contexto:Context, val lista:MutableList<Tarea>, val obj
                 .whereEqualTo("descripcion",cuento.descripcion)
                 .get().addOnCompleteListener {
                     var idDocumento = "0"
+                    var valor = true
                     for(tarea in it.result.documents){
                         idDocumento = tarea.id
+                        if(tarea.toObject(Tarea::class.java)!!.chuleada){
+                            valor = false
+                        }
                     }
                     sharedViewModel.db.collection(correo)
                         .document(id)
                         .collection("Tareas")
                         .document(idDocumento)
-                        .update("chuleada",true)
+                        .update("chuleada",valor)
                     sharedViewModel.db.collection(correo)
                         .document(id)
                         .update("chuleadas",objetivo.chuleadas+1)
