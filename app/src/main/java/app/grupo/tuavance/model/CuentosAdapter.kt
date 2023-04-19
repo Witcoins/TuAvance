@@ -6,10 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.cardview.widget.CardView
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -43,20 +40,18 @@ class CuentosAdapter(val contexto:Context, val lista:MutableList<Tarea>, val obj
         val dia = cuento.fecha.split("/").component3()
         val mes = cuento.fecha.split("/").component2()
 
-        if(cuento.chuleada){
-            holder.tarea.setBackgroundColor(contexto.resources.getColor(R.color.green))
-            holder.tarea.setTextColor(contexto.resources.getColor(R.color.black))
-        }
-
         sharedViewModel.apply {
-            Log.i("prueba","Adapter Tarea: diaHoy - $hoyDia mesHoy - $hoyMes diaObj - ${dia.toInt()} mesObj - ${mes.toInt()}")
-            if (mes.toInt().toString() == hoyMes.toString()) {
-                if (dia.toInt().toString() == (hoyDia+1).toString()) {
+            if (mes.toInt() == hoyMes) {
+                if (dia.toInt() == hoyDia+1) {
                     holder.tarea.setBackgroundColor(contexto.resources.getColor(R.color.amarillo))
                     holder.tarea.setTextColor(contexto.resources.getColor(R.color.black))
-                } else if (dia.toInt().toString() == hoyDia.toString()) {
+                } else if (dia.toInt() == hoyDia) {
                     holder.tarea.setBackgroundColor(contexto.resources.getColor(R.color.red))
                 }
+            } else if(mes.toInt() < hoyMes){
+                holder.tarea.setBackgroundColor(contexto.resources.getColor(R.color.red))
+            } else {
+                holder.tarea.setBackgroundColor(contexto.resources.getColor(R.color.marron))
             }
         }
 
@@ -88,10 +83,12 @@ class CuentosAdapter(val contexto:Context, val lista:MutableList<Tarea>, val obj
                 .get().addOnCompleteListener {
                     var idDocumento = "0"
                     var valor = true
+                    var sumrest = 1
                     for(tarea in it.result.documents){
                         idDocumento = tarea.id
                         if(tarea.toObject(Tarea::class.java)!!.chuleada){
                             valor = false
+                            sumrest = -1
                         }
                     }
                     sharedViewModel.db.collection(correo)
@@ -101,12 +98,18 @@ class CuentosAdapter(val contexto:Context, val lista:MutableList<Tarea>, val obj
                         .update("chuleada",valor)
                     sharedViewModel.db.collection(correo)
                         .document(id)
-                        .update("chuleadas",objetivo.chuleadas+1)
+                        .update("chuleadas",objetivo.chuleadas+sumrest)
                 }
         }
         holder.edita.setOnClickListener {
             dialogoEditar(cuento)
         }
+
+        if(cuento.chuleada){
+            holder.tarea.setBackgroundColor(contexto.resources.getColor(R.color.green))
+            holder.tarea.setTextColor(contexto.resources.getColor(R.color.black))
+        }
+
     }
 
     inner class CuentosHolder(view: View) : RecyclerView.ViewHolder(view),
@@ -135,6 +138,9 @@ class CuentosAdapter(val contexto:Context, val lista:MutableList<Tarea>, val obj
     }
 
     private fun dialogoEditar(actividad:Tarea){
+        val dia = actividad.fecha.split("/").component3().toInt()
+        val mes = actividad.fecha.split("/").component2().toInt()
+        val year = actividad.fecha.split("/").component1().toInt()
         val dialogo = Dialog(contexto)
         dialogo.setContentView(R.layout.dialog_objetivo)
         dialogo.window?.setBackgroundDrawableResource(R.color.colorTransparent2)
@@ -148,10 +154,11 @@ class CuentosAdapter(val contexto:Context, val lista:MutableList<Tarea>, val obj
         }
         dialogo.findViewById<TextView>(R.id.titulo).text = "TAREA"
         dialogo.findViewById<EditText>(R.id.objetivo).setText(actividad.descripcion, TextView.BufferType.EDITABLE)
-        dialogo.findViewById<EditText>(R.id.fecha).setText(actividad.fecha, TextView.BufferType.EDITABLE)
+        dialogo.findViewById<DatePicker>(R.id.fecha).init(year,mes-1,dia,null)
         dialogo.findViewById<Button>(R.id.boton_actualizar).setOnClickListener {
             val et_descripcion = dialogo.findViewById<EditText>(R.id.objetivo)
-            val et_fecha = dialogo.findViewById<EditText>(R.id.fecha)
+            val et_fecha = dialogo.findViewById<DatePicker>(R.id.fecha)
+            val fecha = "${et_fecha.year}/${et_fecha.month+1}/${et_fecha.dayOfMonth}"
         sharedViewModel.db.collection(correo)
             .document(id)
             .collection("Tareas")
@@ -165,7 +172,7 @@ class CuentosAdapter(val contexto:Context, val lista:MutableList<Tarea>, val obj
                     .document(id)
                     .collection("Tareas")
                     .document(idDocumento)
-                    .update("descripcion",et_descripcion.text.toString(),"fecha",et_fecha.text.toString())
+                    .update("descripcion",et_descripcion.text.toString(),"fecha",fecha)
                 dialogo.dismiss()
             }
         }

@@ -34,18 +34,14 @@ class ViewModel: ViewModel() {
     lateinit var dataObjetivo:Objetivo
     var idObjetivo = ""
     var listaTareas:MutableList<Tarea> = mutableListOf()
-    var actualizar = MutableLiveData(false)
-    lateinit var prefs:SharedPreferences
-    var chuleados = MutableLiveData(0)
-    var fechaTarea = ""
-    var descripcionTarea = ""
+    var listaIds:MutableList<String> = mutableListOf()
     var editar = false
 
-    fun escribirTarea(tarea:String, fecha:String, coment:String){
+    fun escribirTarea(tarea:String, fecha:String, coment:String, id:String){
         db.collection(usuario!!.email!!)
             .document(idObjetivo)
             .collection("Tareas")
-            .document((listaTareas.size+1).toString())
+            .document(id)
             .set(
                 hashMapOf(
                     "descripcion" to tarea,
@@ -56,9 +52,9 @@ class ViewModel: ViewModel() {
             )
     }
 
-    fun escribirObjetivo(objetivo:String, fecha:String){
+    fun escribirObjetivo(objetivo:String, fecha:String,id:String){
         db.collection(usuario!!.email!!)
-            .document((listaObjetivos.size+1).toString())
+            .document(id)
             .set(
                 hashMapOf(
                     "objetivo" to objetivo,

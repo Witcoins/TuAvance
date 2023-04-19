@@ -20,6 +20,7 @@
         android:id="@+id/cerrar_sesion"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginVertical="5dp"
         app:layout_constraintDimensionRatio="1:1"
         android:src="@drawable/ic_baseline_logout_24"
         app:layout_constraintEnd_toEndOf="@id/titulo"

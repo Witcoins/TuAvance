@@ -39,24 +39,22 @@ class ObjetivosAdapter(val contexto:Context, val lista:MutableList<Objetivo>, va
         holder.progreso.max = objetivo.total
         holder.progreso.progress = objetivo.chuleadas
 
-        if(objetivo.total==objetivo.chuleadas){
-            holder.objetivo.setBackgroundColor(contexto.resources.getColor(R.color.green))
-            holder.objetivo.setTextColor(contexto.resources.getColor(R.color.black))
-        }
-
         sharedViewModel.apply {
             val dia = objetivo.fecha.split("/").component3()
             val mes = objetivo.fecha.split("/").component2()
 
-            Log.i("prueba","Adapter Objetivo: diaHoy - $hoyDia mesHoy - $hoyMes diaObj - $dia mesObj - $mes")
 
-            if (mes.toInt().toString() == hoyMes.toString()){
-                if(dia.toInt().toString() == (hoyDia+1).toString()){
+            if (mes.toInt() == hoyMes){
+                if(dia.toInt() == hoyDia+1){
                     holder.objetivo.setBackgroundColor(contexto.resources.getColor(R.color.amarillo))
                     holder.objetivo.setTextColor(contexto.resources.getColor(R.color.black))
-                } else if(dia.toInt().toString() == hoyDia.toString()){
+                } else if(dia.toInt() == hoyDia){
                     holder.objetivo.setBackgroundColor(contexto.resources.getColor(R.color.red))
                 }
+            } else if(mes.toInt() < hoyMes){
+                holder.objetivo.setBackgroundColor(contexto.resources.getColor(R.color.red))
+            } else {
+                holder.objetivo.setBackgroundColor(contexto.resources.getColor(R.color.marron))
             }
         }
 
@@ -80,6 +78,11 @@ class ObjetivosAdapter(val contexto:Context, val lista:MutableList<Objetivo>, va
             sharedViewModel.editar = true
            //Sale el diálogo de edición
             dialogoReferido(objetivo.objetivo,objetivo.fecha)
+        }
+
+        if(objetivo.total==objetivo.chuleadas && objetivo.total!=0){
+            holder.objetivo.setBackgroundColor(contexto.resources.getColor(R.color.green))
+            holder.objetivo.setTextColor(contexto.resources.getColor(R.color.black))
         }
     }
 
@@ -109,6 +112,9 @@ class ObjetivosAdapter(val contexto:Context, val lista:MutableList<Objetivo>, va
     }
 
     private fun dialogoReferido(obj:String,date:String) {
+        val dia = date.split("/").component3().toInt()
+        val mes = date.split("/").component2().toInt()
+        val year = date.split("/").component1().toInt()
         val dialogo = Dialog(contexto)
         dialogo.setContentView(R.layout.dialog_objetivo)
         dialogo.window?.setBackgroundDrawableResource(R.color.colorTransparent2)
@@ -121,15 +127,16 @@ class ObjetivosAdapter(val contexto:Context, val lista:MutableList<Objetivo>, va
             dialogo.dismiss()
         }
         dialogo.findViewById<EditText>(R.id.objetivo).setText(obj, TextView.BufferType.EDITABLE)
-        dialogo.findViewById<EditText>(R.id.fecha).setText(date, TextView.BufferType.EDITABLE)
+        dialogo.findViewById<DatePicker>(R.id.fecha).init(year,mes-1,dia,null)
         dialogo.findViewById<Button>(R.id.boton_actualizar).setOnClickListener {
             val et_objetivo = dialogo.findViewById<EditText>(R.id.objetivo)
-            val et_fecha = dialogo.findViewById<EditText>(R.id.fecha)
+            val et_fecha = dialogo.findViewById<DatePicker>(R.id.fecha)
+            val fecha = "${et_fecha.year}/${et_fecha.month+1}/${et_fecha.dayOfMonth}"
             Log.i("prueba","En el adapter: Objetivo - $obj, Fecha - $date")
-            if(et_objetivo.text.toString()!="" && et_fecha.text.toString()!=""){
+            if(et_objetivo.text.toString()!=""){
                 //Siempre edita
                     sharedViewModel.edicion(correo,et_objetivo.text.toString(),"objetivo",obj)
-                    sharedViewModel.edicion(correo,et_fecha.text.toString(),"fecha",date)
+                    sharedViewModel.edicion(correo,fecha,"fecha",date)
                 dialogo.dismiss()
             } else {
                 Toast.makeText(contexto,"Completa la info", Toast.LENGTH_LONG).show()

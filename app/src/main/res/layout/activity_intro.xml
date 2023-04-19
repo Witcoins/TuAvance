@@ -25,6 +25,7 @@
         android:layout_marginBottom="10dp"
         android:textColorHint="@color/white"
         android:layout_marginHorizontal="15dp"
+        android:textSize="15sp"
         style="@style/EditText"
         app:layout_constraintBottom_toTopOf="@id/contrasena"/>
 
@@ -37,6 +38,7 @@
         android:textAllCaps="true"
         android:textColorHint="@color/white"
         android:layout_marginHorizontal="15dp"
+        android:textSize="15sp"
         style="@style/EditText"
         app:layout_constraintBottom_toTopOf="@id/entrar"/>
 

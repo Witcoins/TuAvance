@@ -8,10 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.addCallback
 import androidx.core.view.isGone
 import androidx.fragment.app.DialogFragment
@@ -59,16 +56,22 @@ class ObjetivoFragment : Fragment(), CuentosAdapter.OnItemClickListener {
                 .collection("Tareas")
                 .addSnapshotListener { value, error ->
                     if (value != null && error == null) {
+                        listaIds.clear()
                         dataObjetivo.chuleadas = 0
                         dataObjetivo.total = 0
                         listaTareas = value.toObjects(Tarea::class.java)
-                        listaTareas = listaTareas.sortedBy { it.fecha }.toMutableList()
-                        for(tarea in listaTareas){
+                        for((index,tarea) in listaTareas.withIndex()){
+                            listaIds.add(value.documents[index].id)
                             dataObjetivo.total++
                             if(tarea.chuleada){
                                 dataObjetivo.chuleadas++
                             }
                         }
+
+                        val listaZip = listaIds.zip(listaTareas).sortedBy { it.second.fecha }.map { it.first to it.second }
+                        listaTareas = listaZip.map{ it.second }.toMutableList()
+                        listaIds = listaZip.map { it.first }.toMutableList()
+
                         binding.progressBar2.max = dataObjetivo.total
                         binding.progressBar2.progress = dataObjetivo.chuleadas
                         binding.rvTareas.adapter = CuentosAdapter(requireContext(),listaTareas,dataObjetivo,usuario.email!!,idObjetivo,this@ObjetivoFragment)
@@ -87,6 +90,9 @@ class ObjetivoFragment : Fragment(), CuentosAdapter.OnItemClickListener {
     }
 
     private fun dialogoEditar(){
+        val dia =sharedViewModel.dataObjetivo.fecha.split("/").component3().toInt()
+        val mes = sharedViewModel.dataObjetivo.fecha.split("/").component2().toInt()
+        val year = sharedViewModel.dataObjetivo.fecha.split("/").component1().toInt()
         val dialogo = Dialog(requireContext())
         dialogo.setContentView(R.layout.dialog_objetivo)
         dialogo.window?.setBackgroundDrawableResource(R.color.colorTransparent2)
@@ -99,16 +105,17 @@ class ObjetivoFragment : Fragment(), CuentosAdapter.OnItemClickListener {
             dialogo.dismiss()
         }
         dialogo.findViewById<EditText>(R.id.objetivo).setText(sharedViewModel.dataObjetivo.objetivo, TextView.BufferType.EDITABLE)
-        dialogo.findViewById<EditText>(R.id.fecha).setText(sharedViewModel.dataObjetivo.fecha, TextView.BufferType.EDITABLE)
+        dialogo.findViewById<DatePicker>(R.id.fecha).init(year,mes-1,dia,null)
         dialogo.findViewById<Button>(R.id.boton_actualizar).setOnClickListener {
             val et_objetivo = dialogo.findViewById<EditText>(R.id.objetivo)
-            val et_fecha = dialogo.findViewById<EditText>(R.id.fecha)
-            if(et_objetivo.text.toString()!="" && et_fecha.text.toString()!=""){
+            val et_fecha = dialogo.findViewById<DatePicker>(R.id.fecha)
+            val fecha = "${et_fecha.year}/${et_fecha.month+1}/${et_fecha.dayOfMonth}"
+            if(et_objetivo.text.toString()!=""){
                 //Siempre edita
                     sharedViewModel.edicion(sharedViewModel.usuario!!.email!!,et_objetivo.text.toString(),"objetivo",sharedViewModel.dataObjetivo.objetivo)
-                    sharedViewModel.edicion(sharedViewModel.usuario!!.email!!,et_fecha.text.toString(),"fecha",sharedViewModel.dataObjetivo.fecha)
+                    sharedViewModel.edicion(sharedViewModel.usuario!!.email!!,fecha,"fecha",sharedViewModel.dataObjetivo.fecha)
                 binding.objetivo.text = et_objetivo.text.toString()
-                binding.fecha.text = et_fecha.text.toString()
+                binding.fecha.text = fecha
                 dialogo.dismiss()
             } else {
                 Toast.makeText(requireContext(), "Completa la info", Toast.LENGTH_LONG).show()
@@ -132,10 +139,12 @@ class ObjetivoFragment : Fragment(), CuentosAdapter.OnItemClickListener {
         dialogo.findViewById<TextView>(R.id.titulo).text = "TAREA"
         dialogo.findViewById<Button>(R.id.boton_actualizar).setOnClickListener {
             val et_descripcion = dialogo.findViewById<EditText>(R.id.objetivo)
-            val et_fecha = dialogo.findViewById<EditText>(R.id.fecha)
-            if (et_descripcion.text.toString() != "" && et_fecha.text.toString() != "") {
+            val et_fecha = dialogo.findViewById<DatePicker>(R.id.fecha)
+            val fecha = "${et_fecha.year}/${et_fecha.month+1}/${et_fecha.dayOfMonth}"
+            if (et_descripcion.text.toString() != "") {
                 sharedViewModel.apply {
-                    escribirTarea(et_descripcion.text.toString(), et_fecha.text.toString(),"")
+                    val maxNumber = listaIds.map { it.toInt() }.maxByOrNull { it } ?: 0
+                    escribirTarea(et_descripcion.text.toString(), fecha,"",(maxNumber+1).toString())
                     db.collection(usuario!!.email!!)
                         .document(idObjetivo)
                         .update("total",dataObjetivo.total+1)

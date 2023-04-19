@@ -4,15 +4,14 @@ import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.Toast
-import androidx.activity.addCallback
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import app.grupo.tuavance.databinding.FragmentMetasBinding
@@ -24,7 +23,6 @@ class MetasFragment : Fragment(), ObjetivosAdapter.OnItemClickListener {
     private val sharedViewModel: ViewModel by activityViewModels()
     private var _binding: FragmentMetasBinding? = null
     private val binding get() = _binding!!
-    private lateinit var dialogo: Dialog
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -63,10 +61,12 @@ class MetasFragment : Fragment(), ObjetivosAdapter.OnItemClickListener {
         }
         dialogo.findViewById<Button>(R.id.boton_actualizar).setOnClickListener {
             val et_objetivo = dialogo.findViewById<EditText>(R.id.objetivo)
-            val et_fecha = dialogo.findViewById<EditText>(R.id.fecha)
-           if(et_objetivo.text.toString()!="" && et_fecha.text.toString()!=""){
+            val et_fecha = dialogo.findViewById<DatePicker>(R.id.fecha)
+            val fecha = "${et_fecha.year}/${et_fecha.month+1}/${et_fecha.dayOfMonth}"
+           if(et_objetivo.text.toString()!=""){
                //Siempre escribe
-                   sharedViewModel.escribirObjetivo(et_objetivo.text.toString(),et_fecha.text.toString())
+               val maxNumber = sharedViewModel.listaIds.map { it.toInt() }.maxByOrNull { it } ?: 0
+                   sharedViewModel.escribirObjetivo(et_objetivo.text.toString(),fecha,(maxNumber+1).toString())
                dialogo.dismiss()
            } else {
                Toast.makeText(requireContext(),"Completa la info",Toast.LENGTH_LONG).show()
@@ -86,15 +86,22 @@ class MetasFragment : Fragment(), ObjetivosAdapter.OnItemClickListener {
             db.collection(usuario!!.email!!)
                 .addSnapshotListener { value, error ->
                     if(value!=null && error==null){
+                        listaIds.clear()
                         //Cargar lista objetivos
                         listaObjetivos = value.toObjects(Objetivo::class.java)
                         for((index,elemento) in listaObjetivos.withIndex()){
+                            listaIds.add(value.documents[index].id)
                             if(elemento.objetivo == ""){
                                 listaObjetivos.removeAt(index)
+                                listaIds.removeAt(index)
                             }
                         }
+                        Log.i("prueba","Orden lista IDs antes:$listaIds")
                         //Ordenar la lista por fechas de pronto a tarde
-                        listaObjetivos = listaObjetivos.sortedBy { it.fecha }.toMutableList()
+                        val listaZip = listaIds.zip(listaObjetivos).sortedBy { it.second.fecha }.map { it.first to it.second }
+                        listaObjetivos = listaZip.map{ it.second }.toMutableList()
+                        listaIds = listaZip.map { it.first }.toMutableList()
+                        Log.i("prueba","Orden lista IDs después:$listaIds")
                         binding.rvTareas.adapter = ObjetivosAdapter(requireContext(), listaObjetivos,
                             usuario.email!!,this@MetasFragment)
                         if(listaObjetivos.size>0){
